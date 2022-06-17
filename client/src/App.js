@@ -1,5 +1,7 @@
 import React from 'react';
 import { ApolloProvider, ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+//check the token when the pages are rendered
+import { setContext } from '@apollo/client/link/context';
 // import react router from the react-router-dom npm package
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // import the page components to render the necessary pages the user clicks
@@ -18,8 +20,20 @@ const httpLink = createHttpLink({
   uri: '/graphql',
 });
 
+// retrieve the token from local storage
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('id_token');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
+
+// add authlink to check if the token is active
 const client = new ApolloClient({
-  link: httpLink,
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 
