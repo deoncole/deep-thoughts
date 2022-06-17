@@ -11,7 +11,6 @@ import ReactionForm from '../components/ReactionForm';
 import Auth from '../utils/auth';
 
 const SingleThought = (props) => {
-
   const { id: thoughtId } = useParams();
 
   const { loading, data } = useQuery(QUERY_THOUGHT, {
@@ -23,7 +22,7 @@ const SingleThought = (props) => {
   if (loading) {
     return <div>Loading...</div>;
   }
-  
+
   return (
     <div>
       <div className="card mb-3">
@@ -37,7 +36,11 @@ const SingleThought = (props) => {
           <p>{thought.thoughtText}</p>
         </div>
       </div>
-      {thought.reactionCount > 0 && (<ReactionList reactions={thought.reactions} />)}
+
+      {thought.reactionCount > 0 && (
+        <ReactionList reactions={thought.reactions} />
+      )}
+
       {Auth.loggedIn() && <ReactionForm thoughtId={thought._id} />}
     </div>
   );
